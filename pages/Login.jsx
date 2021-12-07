@@ -32,6 +32,7 @@ const Login = () => {
         setUsuario(result.data);
       })
       .catch((erro) => {
+        console.log(erro)
         setMostrarMensagemErro(true);
       });
   };

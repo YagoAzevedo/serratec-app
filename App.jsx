@@ -2,6 +2,7 @@ import { NativeBaseProvider } from "native-base";
 import React from "react";
 import { StatusBar } from "react-native";
 import "react-native-gesture-handler";
+import { Container } from "./components/Container";
 import Menu from './components/Menu';
 import { UsuarioProvider } from "./context";
 
@@ -12,7 +13,7 @@ export default function App() {
         <Menu />
         <StatusBar
           backgroundColor="blue"
-          style="light"
+          style="dark"
           barStyle="dark-content"
         />
       </NativeBaseProvider>
