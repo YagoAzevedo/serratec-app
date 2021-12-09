@@ -16,7 +16,7 @@ import { Container } from "../components/Container";
 import Title from "../components/Title";
 import { UsuarioContext } from "../context";
 
-const Login = () => {
+const Login = ({navigation}) => {
   const [email, setEmail] = useState();
   const [senha, setSenha] = useState();
   const [mostrarMensagemErro, setMostrarMensagemErro] = useState(false);
@@ -30,6 +30,7 @@ const Login = () => {
       })
       .then((result) => {
         setUsuario(result.data);
+        navigation.navigate('Alunos');
       })
       .catch((erro) => {
         console.log(erro)

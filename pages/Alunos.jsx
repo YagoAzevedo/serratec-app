@@ -1,24 +1,22 @@
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import axios from "axios";
 import {
-  Actionsheet,
-  Box,
-  HStack,
+  Actionsheet, AlertDialog, Box, HStack,
   Icon,
   Pressable,
-  Spacer,
-  useDisclose,
-  VStack,
-  Text
+  Spacer, Text, useDisclose,
+  VStack
 } from "native-base";
 import React, { useEffect, useState } from "react";
-import { Path } from "react-native-svg";
 import { SwipeListView } from "react-native-swipe-list-view";
 
 const Alunos = () => {
   const [alunos, setAlunos] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclose();
   const [alunoSelecionado, setAlunoSelecionado] = useState();
+  const [isOpenDeleted, setIsOpenDeleted] = useState(false);
+  const cancelRef = React.useRef(null)
+
   const URL = 'https://secret-headland-69654.herokuapp.com/alunos';
 
   useEffect(() => {
@@ -38,6 +36,7 @@ const Alunos = () => {
       .delete(URL, { data: alunoSelecionado })
       .then((response) => {
         onClose();
+        setIsOpenDeleted(true);
         consultarAlunos();
       });
   }
@@ -45,12 +44,13 @@ const Alunos = () => {
   const renderItem = ({ item }) => {
     const clicarAluno = () => {
       setAlunoSelecionado(item);
+      setAlunos([...alunos]);
       onOpen();
     }
 
     return (
       <Box>
-        <Pressable onPress={() => clicarAluno()} bg={item.id == alunoSelecionado?.id ? "#FF0000":"white"}>
+        <Pressable onPress={() => clicarAluno()} bg={item.id == alunoSelecionado?.id ? "#c2c2c2":"#ffffff"}>
           <Box pl="4" pr="5" py="2">
             <HStack alignItems="center" space={3}>
               <VStack>
@@ -84,6 +84,20 @@ const Alunos = () => {
   return (
     <>
       <SwipeListView data={alunos} renderItem={renderItem} />
+
+      <AlertDialog
+        leastDestructiveRef={cancelRef}
+        isOpen={isOpenDeleted}
+        onClose={() => setIsOpenDeleted(false)}
+      >
+        <AlertDialog.Content>
+          <AlertDialog.CloseButton />
+          <AlertDialog.Header>Aluno deletado</AlertDialog.Header>
+          <AlertDialog.Body>
+            Você já apagou o aluno
+          </AlertDialog.Body>
+        </AlertDialog.Content>
+      </AlertDialog>
 
       <Actionsheet isOpen={isOpen} onClose={onClose} size="full">
         <Actionsheet.Content>
