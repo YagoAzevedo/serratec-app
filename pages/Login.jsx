@@ -10,17 +10,22 @@ import {
   VStack,
   Collapse,
 } from "native-base";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "react-native-gesture-handler";
 import { Container } from "../components/Container";
 import Title from "../components/Title";
 import { UsuarioContext } from "../context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const Login = ({navigation}) => {
+const Login = ({ navigation }) => {
   const [email, setEmail] = useState();
   const [senha, setSenha] = useState();
   const [mostrarMensagemErro, setMostrarMensagemErro] = useState(false);
-  const { setUsuario } = useContext(UsuarioContext);
+  const { usuario, setUsuario } = useContext(UsuarioContext);
+
+  useEffect(() => {
+    if (usuario) navigation.navigate("Alunos");
+  }, [usuario]);
 
   const efetuarLogin = () => {
     axios
@@ -28,12 +33,16 @@ const Login = ({navigation}) => {
         email,
         senha,
       })
-      .then((result) => {
+      .then(async (result) => {
+        const usuarioEmString = JSON.stringify(result.data);
+        AsyncStorage.removeItem("@usuario").then(() => {
+          AsyncStorage.setItem("@usuario", usuarioEmString);
+        });
         setUsuario(result.data);
-        navigation.navigate('Alunos');
+        navigation.navigate("Alunos");
       })
       .catch((erro) => {
-        console.log(erro)
+        console.log(erro);
         setMostrarMensagemErro(true);
       });
   };
@@ -41,25 +50,27 @@ const Login = ({navigation}) => {
   return (
     <Container>
       <Title>Serratec app</Title>
-        <Collapse isOpen={mostrarMensagemErro}>
-          <Alert w="100%" status={"error"} mt="5">
-            <VStack space={2} flexShrink={1} w="100%">
-              <HStack flexShrink={1} space={2} justifyContent="space-between">
-                <HStack space={2} flexShrink={1}>
-                  <Alert.Icon mt="1" />
-                  <Text fontSize="md" color="coolGray.800">
-                    {"Usuário ou senha incorretos"}
-                  </Text>
-                </HStack>
-                <IconButton
-                  variant="unstyled"
-                  icon={<CloseIcon size="3" color="coolGray.600" />}
-                  onPress={() => { setMostrarMensagemErro(false) }}
-                />
+      <Collapse isOpen={mostrarMensagemErro}>
+        <Alert w="100%" status={"error"} mt="5">
+          <VStack space={2} flexShrink={1} w="100%">
+            <HStack flexShrink={1} space={2} justifyContent="space-between">
+              <HStack space={2} flexShrink={1}>
+                <Alert.Icon mt="1" />
+                <Text fontSize="md" color="coolGray.800">
+                  {"Usuário ou senha incorretos"}
+                </Text>
               </HStack>
-            </VStack>
-          </Alert>
-        </Collapse>
+              <IconButton
+                variant="unstyled"
+                icon={<CloseIcon size="3" color="coolGray.600" />}
+                onPress={() => {
+                  setMostrarMensagemErro(false);
+                }}
+              />
+            </HStack>
+          </VStack>
+        </Alert>
+      </Collapse>
       <Input
         mx="3"
         placeholder="Seu e-mail"

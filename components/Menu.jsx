@@ -92,7 +92,7 @@ function MyDrawer({ usuario }) {
           <CustomDrawerContent usuario={usuario} {...props} />
         )}
         screenOptions={{headerShown: usuario ? true : false}}
-        initialRouteName="Login"
+        initialRouteName={usuario ? "Alunos" : "Login"}
       >
         <Drawer.Screen name="Alunos" component={Alunos} />
         <Drawer.Screen name="Login" component={Login} />
@@ -104,6 +104,7 @@ function MyDrawer({ usuario }) {
 
 export default function Menu() {
   const { usuario } = useContext(UsuarioContext);
+
   return (
     <NavigationContainer>
       <MyDrawer usuario={usuario} />
