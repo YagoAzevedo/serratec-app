@@ -10,7 +10,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { SwipeListView } from "react-native-swipe-list-view";
 
-const Alunos = () => {
+const Alunos = ({navigation}) => {
   const [alunos, setAlunos] = useState([]);
   const { isOpen, onOpen, onClose } = useDisclose();
   const [alunoSelecionado, setAlunoSelecionado] = useState();
@@ -141,6 +141,12 @@ const Alunos = () => {
           </Actionsheet.Item>
         </Actionsheet.Content>
       </Actionsheet>
+
+      <Pressable onPress={()=>{
+        navigation.navigate('Cadastro')
+      }}>
+        <Text>TESTAR</Text>
+      </Pressable>
     </>
   );
 };

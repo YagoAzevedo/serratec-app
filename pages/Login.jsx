@@ -35,9 +35,9 @@ const Login = ({ navigation }) => {
       })
       .then(async (result) => {
         const usuarioEmString = JSON.stringify(result.data);
-        AsyncStorage.removeItem("@usuario").then(() => {
+        // AsyncStorage.removeItem("@usuario").then(() => {
           AsyncStorage.setItem("@usuario", usuarioEmString);
-        });
+        // });
         setUsuario(result.data);
         navigation.navigate("Alunos");
       })
